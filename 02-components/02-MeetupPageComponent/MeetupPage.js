@@ -5,7 +5,7 @@ export const MeetupPage = {
   name: 'MeetupPage',
 
   template: `<div>
-    <meetup-view :meetup="rawMeetup" />
+    <meetup-view v-if="rawMeetup" :meetup="rawMeetup" />
   </div>`,
 
   // components
@@ -14,11 +14,9 @@ export const MeetupPage = {
   },
 
   // data
-  data: function () {
-    return {
-      rawMeetup: {},
-    }
-  },
+  data: () => ({
+    rawMeetup: null,
+  }),
   // mounted
   async mounted() {
     this.rawMeetup = await fetchMeetup(MEETUP_ID);

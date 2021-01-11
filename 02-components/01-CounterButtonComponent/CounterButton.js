@@ -1,6 +1,6 @@
 export const CounterButton = {
   // Шаблон потребуется отредактировать
-  template: '<button type="button" @click="clickHandler">{{ counter }}</button>',
+  template: '<button type="button" @click="clickHandler">{{ count }}</button>',
 
   // Компонент должен иметь входной параметр
   props: {
@@ -10,12 +10,6 @@ export const CounterButton = {
       // validator: (value) => value.typeof === 'number',
     },
   },
-  data: function () {
-    return {
-      counter: this.count
-    }
-  },
-
   // Компонент должен иметь модель
   model: {
     prop: 'count',
@@ -24,7 +18,7 @@ export const CounterButton = {
   // Шаблон лучше держать максимально простым, а логику выносить в методы
   methods: {
     clickHandler(e) {
-      this.$emit('increment', this.counter = this.counter + 1)
+      this.$emit('increment', this.count + 1)
     },
   },
 };
