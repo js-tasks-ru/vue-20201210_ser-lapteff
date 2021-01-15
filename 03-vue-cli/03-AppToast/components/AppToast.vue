@@ -1,12 +1,13 @@
 <template>
   <div class="toasts">
-    <div class="toast toast_success">
-      <app-icon icon="check-circle" />
-      <span>Success</span>
-    </div>
-    <div class="toast toast_error">
-      <app-icon icon="alert-circle" />
-      <span>Error</span>
+    <div
+      class="toast"
+      v-for="toast in toastsArr"
+      :key="toast.id"
+      :class="`toast_${toast.type}`"
+    >
+      <app-icon :icon="toast.icon" />
+      <span>{{ toast.message }}</span>
     </div>
   </div>
 </template>
@@ -21,10 +22,30 @@ export default {
 
   components: { AppIcon },
 
-  methods: {
-    error(message) {},
+  data: () => ({
+    toastsArr: [],
+  }),
 
-    success(message) {},
+  methods: {
+    error(message) {
+      this.addToast(message, 'error');
+    },
+
+    success(message) {
+      this.addToast(message, 'success');
+    },
+
+    addToast(message, type) {
+      this.toastsArr.push({
+        id: Math.random(),
+        message,
+        type,
+        icon: type === 'success' ? 'check-circle' : 'alert-circle',
+      });
+      setTimeout(() => {
+        this.toastsArr.splice(0, 1);
+      }, DELAY);
+    },
   },
 };
 </script>
