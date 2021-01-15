@@ -12,8 +12,8 @@
       class="button dropdown__toggle"
       :class="{ dropdown__toggle_icon: hasWithIcon }"
     >
-      <app-icon v-if="selected.icon" :icon="selected.icon" />
-      {{ selected.text }}
+      <app-icon v-if="getIcon" :icon="getIcon" />
+      {{ computedTitle }}
     </button>
 
     <div class="dropdown__menu" :class="{ show: isShow }">
@@ -59,15 +59,20 @@ export default {
     };
   },
   computed: {
-    selected() {
-      return {
-        value: this.value,
-        text: this.computedTitle(),
-        icon: this.getIcon(),
-      };
-    },
     hasWithIcon() {
       return this.options.some((option) => option.icon);
+    },
+    computedTitle() {
+      if (this.value) {
+        let titleText = this.options.find((el) => el.value === this.value).text;
+        return `${this.title} - ${titleText}`;
+      }
+      return this.title;
+    },
+    getIcon() {
+      return this.value
+        ? this.options.find((el) => el.value === this.value).icon
+        : null;
     },
   },
   model: {
@@ -81,18 +86,6 @@ export default {
     changeSelect(value) {
       this.isShow = !this.isShow;
       this.$emit('change', value);
-    },
-    getIcon() {
-      return this.value
-        ? this.options.find((el) => el.value === this.value).icon
-        : null;
-    },
-    computedTitle() {
-      if (this.value) {
-        let titleText = this.options.find((el) => el.value === this.value).text;
-        return `${this.title} - ${titleText}`;
-      }
-      return this.title;
     },
   },
 };
