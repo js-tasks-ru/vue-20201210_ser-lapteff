@@ -1,7 +1,7 @@
 <template>
   <div class="content-tabs">
     <div class="content-tabs__nav">
-      <router-link v-for="(tab, index) in tabs" :key="index" :to="tab.to" class="content-tabs__tab">{{ tab.text }}</router-link>
+      <router-link v-for="(tab, index) in tabs" :key="index" :to="tab.to" class="content-tabs__tab" active-class="content-tabs__tab_active">{{ tab.text }}</router-link>
     </div>
     <div class="content-tabs__content">
         <slot/>
@@ -16,9 +16,6 @@ export default {
     tabs: {
       type: Array,
       required: true
-    },
-    prop: {
-    
     }
   }
 };
