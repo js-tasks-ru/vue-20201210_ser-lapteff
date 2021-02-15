@@ -9,7 +9,6 @@ import BaseButton from "./BaseButton";
 
 export default {
   name: 'DangerButton',
-  inheritAttrs: false,
 
   components: {
     BaseButton

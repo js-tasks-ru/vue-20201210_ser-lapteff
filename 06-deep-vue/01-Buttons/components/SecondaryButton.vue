@@ -9,7 +9,6 @@ import BaseButton from "./BaseButton";
 
 export default {
   name: 'SecondaryButton',
-  inheritAttrs: false,
 
   components: {
     BaseButton

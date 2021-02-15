@@ -1,7 +1,6 @@
 <script>
 export default {
   render: function (h) {
-    var self = this
     return h(
       this.tag,
       {
@@ -9,11 +8,7 @@ export default {
         class: {
           button_block: this.block
         },
-        on: {
-          click: function () {
-            self.$emit('click')
-          }
-        },
+        on: this.$listeners,
       },
       this.$slots.default
     )
