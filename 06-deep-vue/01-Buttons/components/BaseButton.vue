@@ -1,18 +1,11 @@
+<template>
+  <component :is="tag" class="button" :class="{ button_block: block }" v-on="$listeners">
+    <slot/>
+  </component>
+</template>
+
 <script>
 export default {
-  render: function (h) {
-    return h(
-      this.tag,
-      {
-        staticClass: "button",
-        class: {
-          button_block: this.block
-        },
-        on: this.$listeners,
-      },
-      this.$slots.default
-    )
-  },
   name: 'BaseButton',
   props: {
     block: Boolean,
