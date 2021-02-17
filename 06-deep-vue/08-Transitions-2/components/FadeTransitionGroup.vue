@@ -1,6 +1,29 @@
 <script>
 export default {
   name: 'FadeTransitionGroup',
+  render(h) {
+    const clonesSlots = this.$slots.default.map(vnode => {
+      vnode.data.class = {
+        ...vnode.data.class,
+        'fade-list-item': true
+      };
+      return vnode;
+    })
+    // console.log(clonesSlots)
+
+    return h('transition-group',
+      {
+        class: {
+          'fade-list': true
+        },
+        attrs: {
+          ...this.$attrs,
+          name: 'fade-list'
+        },
+        on: this.$listeners
+      },
+      clonesSlots)
+  },
 };
 </script>
 
