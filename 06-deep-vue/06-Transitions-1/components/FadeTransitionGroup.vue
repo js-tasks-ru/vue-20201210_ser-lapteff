@@ -6,12 +6,11 @@
 
 <script>
 export default {
-  name: 'FadeTransitionGroup',
-  inheritAttrs: false
+  name: 'FadeTransitionGroup'
 };
 </script>
 
-<style scoped>
+<style>
 .fade-list {
   position: relative;
 }
