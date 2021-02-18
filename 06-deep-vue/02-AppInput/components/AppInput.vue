@@ -1,19 +1,87 @@
 <template>
   <div
-    class="input-group input-group_icon input-group_icon-left input-group_icon-right"
+    class="input-group"
+    :class="{
+    'input-group_icon': this.hasLeftIconSlot || this.hasRightIconSlot,
+    'input-group_icon-left': this.hasLeftIconSlot,
+    'input-group_icon-right': this.hasRightIconSlot,
+    }"
   >
-    <img class="icon" />
+    <slot class="icon" name="left-icon"></slot>
 
-    <input class="form-control form-control_rounded form-control_sm" />
+    <component
+      :is="multiline ? 'textarea' : 'input'"
+      :value.prop="value"
+      v-bind="$attrs"
+      v-on="controlListeners"
+      class="form-control"
+      :class="{
+        'form-control_sm': small,
+         'form-control_rounded': rounded
+      }"/>
 
-    <img class="icon" />
+    <slot class="icon" name="right-icon"></slot>
   </div>
 </template>
 
 <script>
 export default {
   name: 'AppInput',
-};
+  inheritAttrs: false,
+
+  props: {
+    small: {
+      type: Boolean,
+      default: false,
+    },
+    rounded: {
+      type: Boolean,
+      default: false,
+    },
+    multiline: {
+      type: Boolean,
+      default: false,
+    },
+    value: {
+      required: false,
+      default: '',
+    },
+  },
+  model: {
+    prop: 'value',
+    event: 'input'
+  },
+
+  data() {
+    return {
+      hasLeftIconSlot: false,
+      hasRightIconSlot: false
+    }
+  },
+  // Начальное значение получаем при монтировании
+  mounted() {
+    this.hasIcon()
+  },
+  // И затем обновляем при обновлении компонента (при его ререндеринге)
+  updated() {
+    this.hasIcon()
+  },
+  computed: {
+    controlListeners: function () {
+      return {
+        ...this.$listeners,
+        input: ($event) => this.$emit('input', $event.target.value),
+        change: ($event) => this.$emit('change', $event.target.value)
+      }
+    },
+  },
+  methods: {
+    hasIcon() {
+      this.hasLeftIconSlot = !!this.$slots['left-icon'];
+      this.hasRightIconSlot = !!this.$slots['right-icon'];
+    }
+  }
+}
 </script>
 
 <style scoped>
