@@ -1,15 +1,45 @@
 <script>
+function cloneVNode(vnode) {
+  const VNode = vnode.__proto__.constructor
+  const cloned = new VNode(
+    vnode.tag,
+    vnode.data,
+    vnode.children && vnode.children.slice(),
+    vnode.text,
+    vnode.elm,
+    vnode.context,
+    vnode.componentOptions,
+    vnode.asyncFactory
+  )
+  cloned.ns = vnode.ns
+  cloned.isStatic = vnode.isStatic
+  cloned.key = vnode.key
+  cloned.isComment = vnode.isComment
+  cloned.fnContext = vnode.fnContext
+  cloned.fnOptions = vnode.fnOptions
+  cloned.fnScopeId = vnode.fnScopeId
+  cloned.asyncMeta = vnode.asyncMeta
+  cloned.isCloned = true
+  return cloned
+}
 export default {
   name: 'FadeTransitionGroup',
   render(h) {
     const clonesSlots = this.$slots.default.map(vnode => {
-      vnode.data.class = {
-        ...vnode.data.class,
-        'fade-list-item': true
-      };
-      return vnode;
+      const clone = cloneVNode(vnode);
+      if (clone.data.class !== undefined && Array.isArray(clone.data.class)) {
+        clone.data.staticClass = clone.data.class.join(' ');
+        clone.data.class = {
+          'fade-list-item': true
+        };
+      } else {
+        clone.data.class = {
+          ...clone.data.class,
+          'fade-list-item': true
+        };
+      }
+      return clone;
     })
-    // console.log(clonesSlots)
 
     return h('transition-group',
       {
