@@ -27,16 +27,10 @@ export default {
   render(h) {
     const clonesSlots = this.$slots.default.map(vnode => {
       const clone = cloneVNode(vnode);
-      if (clone.data.class !== undefined && Array.isArray(clone.data.class)) {
-        clone.data.staticClass = clone.data.class.join(' ');
-        clone.data.class = {
-          'fade-list-item': true
-        };
+      if (clone.data.staticClass !== undefined) {
+        clone.data.staticClass += ' fade-list-item';
       } else {
-        clone.data.class = {
-          ...clone.data.class,
-          'fade-list-item': true
-        };
+        clone.data.staticClass = 'fade-list-item';
       }
       return clone;
     })
