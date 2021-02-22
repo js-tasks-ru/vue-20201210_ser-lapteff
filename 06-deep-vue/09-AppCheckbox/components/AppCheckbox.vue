@@ -1,10 +1,12 @@
 <template>
-  <label class="checkbox" >
-    <input type="checkbox"
-           v-model="localValue"
-           :value="value"
-           v-bind="$attrs"
-           v-on="controlListeners"  />
+  <label class="checkbox">
+    <input
+      type="checkbox"
+      v-model="localValue"
+      :value="value"
+      v-bind="$attrs"
+      v-on="controlListeners"
+    />
     <slot />
     <span></span>
   </label>
@@ -23,24 +25,22 @@ export default {
   computed: {
     localValue: {
       get: function () {
-        return this.checked
+        return this.checked;
       },
       set: function (newValue) {
         this.$emit('change', newValue);
-      }
+      },
     },
     controlListeners: function () {
-      delete this.$listeners.change;
-      return {
-        ...this.$listeners
-      }
+      let listeners = { ...this.$listeners };
+      delete listeners.change;
+      return listeners;
     },
   },
   model: {
     prop: 'checked',
-    event: 'change'
-  }
-
+    event: 'change',
+  },
 };
 </script>
 
