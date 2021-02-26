@@ -1,34 +1,40 @@
 <template>
-  <form class="form meetup-form">
+  <form class="form meetup-form" @submit.prevent="handleSubmit">
     <div class="meetup-form__content">
       <fieldset class="form-section">
         <div class="form-group">
           <label class="form-label">Название</label>
-          <input class="form-control" />
+          <input class="form-control" v-model="meetup_.title"/>
         </div>
         <div class="form-group">
           <label class="form-label">Дата</label>
-          <input class="form-control" type="date" />
+          <input class="form-control" type="date" v-model="meetupDate"/>
         </div>
         <div class="form-group">
           <label class="form-label">Место</label>
-          <input class="form-control" />
+          <input class="form-control" v-model="meetup_.place"/>
         </div>
         <div class="form-group">
           <label class="form-label">Описание</label>
-          <textarea class="form-control" rows="3"></textarea>
+          <textarea class="form-control" rows="3" v-model="meetup_.description"></textarea>
         </div>
         <div class="form-group">
           <label class="form-label">Изображение</label>
-          <image-uploader />
+          <image-uploader v-model="meetup_.imageId"/>
         </div>
       </fieldset>
 
       <h3 class="form__section-title">Программа</h3>
-      <!-- <meetup-agenda-item-form class="mb-3" />-->
+      <meetup-agenda-item-form
+        v-for="( agendaItem, index ) in meetup_.agenda"
+        :agendaItem.sync="agendaItem"
+        :key="agendaItem.id"
+        @remove="removeAgendaItem(index)"
+        @update:agendaItem="updateAgendaItem(index, $event)"
+        class="mb-3"/>
 
       <div class="form-section_append">
-        <button type="button" data-test="addAgendaItem">
+        <button type="button" data-test="addAgendaItem" @click="addAgendaItem">
           + Добавить этап программы
         </button>
       </div>
@@ -40,6 +46,7 @@
           class="button button_secondary button_block"
           type="button"
           data-test="cancel"
+          @click="$emit('cancel')"
         >
           Отмена
         </button>
@@ -48,7 +55,7 @@
           type="submit"
           data-test="submit"
         >
-          Submit
+          {{ submitText }}
         </button>
       </div>
     </div>
@@ -72,6 +79,10 @@ function buildAgendaItem() {
   };
 }
 
+function deepClone(obj) {
+  return JSON.parse(JSON.stringify(obj))
+}
+
 export default {
   name: 'MeetupForm',
 
@@ -79,6 +90,62 @@ export default {
     ImageUploader,
     MeetupAgendaItemForm,
   },
+  data() {
+    return {
+      meetup_: deepClone(this.meetup),
+      // agenda_: [...this.meetup.agenda]
+    }
+  },
+  props: {
+    meetup: {
+      type: Object,
+      required: true
+    },
+    submitText: {
+      type: String
+    }
+  },
+  computed: {
+    meetupDate: {
+      get() {
+        return this.dateString(this.meetup_.date)
+      },
+      set(date) {
+        this.meetup_.date = date;
+      }
+    }
+  },
+  methods: {
+    dateString(valDate) {
+      const curDate = new Date(valDate)
+      const YYYY = curDate.getUTCFullYear();
+      const MM = (curDate.getUTCMonth() + 1).toString().padStart(2, '0');
+      const DD = curDate.getUTCDate().toString().padStart(2, '0');
+      return `${YYYY}-${MM}-${DD}`;
+    },
+    handleUpdateDate($event) {
+      this.$emit('change', this.meetup_.date = this.dateString($event.target.valueAsDate))
+    },
+    addAgendaItem() {
+      const item = buildAgendaItem();
+      const arrAgenda = this.meetup_.agenda;
+      if (arrAgenda.length === 0) {
+        arrAgenda.push(item)
+      } else {
+        item.startsAt = arrAgenda[arrAgenda.length - 1].endsAt;
+        this.meetup_.agenda.push(item)
+      }
+    },
+    removeAgendaItem(index) {
+      this.meetup_.agenda.splice(index, 1)
+    },
+    updateAgendaItem(index, newAgendaItem) {
+      this.meetup_.agenda.splice(index, 1, newAgendaItem)
+    },
+    handleSubmit() {
+      this.$emit('submit', deepClone(this.meetup_))
+    },
+  }
 };
 </script>
 
