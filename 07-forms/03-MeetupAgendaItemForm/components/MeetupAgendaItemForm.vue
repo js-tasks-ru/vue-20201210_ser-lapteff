@@ -74,14 +74,14 @@ export default {
   },
   data() {
     return {
-      agendaItem_: this.agendaItem
+      agendaItem_: { ...this.agendaItem }
     }
   },
   watch: {
     agendaItem_: {
       deep: true,
-      handler(newValue) {
-        this.$emit('update:agendaItem', newValue);
+      handler() {
+        this.$emit('update:agendaItem', {...this.agendaItem_});
       }
     }
   },
