@@ -1,7 +1,5 @@
 <template>
   <calendar-view :meetups="meetups">
-    <!-- Каждый митап - ссылка на страницу митапа -->
-    <!-- Используя слот требуется вывести список митапов дня в каждой ячейке -->
     <template #default="{item: meetup}">
       <router-link :to="{ name: 'meetup', params: { meetupId: meetup.id } }"
                    class="rangepicker__event"
