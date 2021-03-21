@@ -1,9 +1,12 @@
 <template>
-  <calendar-view :meetups="meetups">
-    <template #default="{item: meetup}">
-      <router-link :to="{ name: 'meetup', params: { meetupId: meetup.id } }"
-                   class="rangepicker__event"
-      >{{ meetup.title }}
+  <calendar-view>
+    <template #default="{day}">
+      <router-link
+        v-for="meetup in meetups"
+        v-if="toLocalDate(meetup.date) === day"
+        :to="{ name: 'meetup', params: { meetupId: meetup.id } }"
+        class="rangepicker__event">
+        {{ meetup.title }}
       </router-link>
     </template>
   </calendar-view>
@@ -25,6 +28,15 @@ export default {
   components: {
     CalendarView,
   },
+  methods: {
+    toLocalDate(date) {
+      return new Date(date).toLocaleString(navigator.language, {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+    }
+  }
 };
 </script>
 

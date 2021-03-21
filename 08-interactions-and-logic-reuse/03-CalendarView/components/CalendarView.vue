@@ -11,9 +11,7 @@
       <div class="rangepicker__date-grid">
         <div class="rangepicker__cell" :class="{ rangepicker__cell_inactive: day.isInactive }" v-for="day in daysArray">
           {{ day.dayNum }}
-          <template v-for="item in day.todaysMeetups">
-            <slot :item="item"></slot>
-          </template>
+            <slot :day="day.dayDate"></slot>
         </div>
       </div>
     </div>
@@ -23,12 +21,6 @@
 <script>
 export default {
   name: 'CalendarView',
-
-  props: {
-    meetups: {
-      type: Array,
-    }
-  },
 
   data() {
     return {
@@ -55,7 +47,6 @@ export default {
       let firstDay = new Date(this.currentFullYear, this.currentMonth, 1).getDay();
       let lastDay = new Date(this.currentFullYear, this.currentMonth + 1, 0).getDay();
       let daysArray = [];
-      let todaysMeetups = [];
 
       firstDay === 0 ? prevDays = 6 : prevDays = firstDay - 1;
       lastDay === 0 ? nextDays = 0 : nextDays = 7 - lastDay;
@@ -69,21 +60,10 @@ export default {
           month: 'long',
           day: 'numeric'
         });
-        if (this.meetups) {
-          todaysMeetups = this.meetups.filter((meetup) => {
-            let meetupDateStr = new Date(meetup.date).toLocaleString(navigator.language, {
-              year: 'numeric',
-              month: 'long',
-              day: 'numeric'
-            });
-            return meetupDateStr === currentDateStr;
-          });
-        }
         daysArray.push({
-            dayDate: currentDate,
+            dayDate: currentDateStr,
             dayNum: currentDate.getDate(),
             isInactive: (daysArray.length < prevDays) || (daysArray.length >= (total - nextDays)),
-            todaysMeetups: todaysMeetups.length ? todaysMeetups : null,
           }
         );
       }
