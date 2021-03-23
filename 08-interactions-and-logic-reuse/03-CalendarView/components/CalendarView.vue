@@ -3,23 +3,16 @@
     <div class="rangepicker__calendar">
       <div class="rangepicker__month-indicator">
         <div class="rangepicker__selector-controls">
-          <button class="rangepicker__selector-control-left"></button>
-          <div>Январь 2021</div>
-          <button class="rangepicker__selector-control-right"></button>
+          <button class="rangepicker__selector-control-left" @click="prevMonth"></button>
+          <div>{{ currentMonthLocal }} {{ currentFullYear }}</div>
+          <button class="rangepicker__selector-control-right" @click="nextMonth"></button>
         </div>
       </div>
       <div class="rangepicker__date-grid">
-        <div class="rangepicker__cell rangepicker__cell_inactive">28</div>
-        <div class="rangepicker__cell rangepicker__cell_inactive">29</div>
-        <div class="rangepicker__cell rangepicker__cell_inactive">30</div>
-        <div class="rangepicker__cell rangepicker__cell_inactive">31</div>
-        <div class="rangepicker__cell">
-          1
-          <a class="rangepicker__event">Митап</a>
-          <a class="rangepicker__event">Митап</a>
+        <div class="rangepicker__cell" :class="{ rangepicker__cell_inactive: day.isInactive }" v-for="day in daysArray">
+          {{ day.dayNum }}
+            <slot :day="day.dayDate"></slot>
         </div>
-        <div class="rangepicker__cell">2</div>
-        <div class="rangepicker__cell">3</div>
       </div>
     </div>
   </div>
@@ -28,6 +21,64 @@
 <script>
 export default {
   name: 'CalendarView',
+
+  data() {
+    return {
+      date: new Date(),
+    }
+  },
+
+  computed: {
+    currentMonth(){
+      return this.date.getMonth()
+    },
+    currentMonthLocal() {
+      return this.date.toLocaleString(navigator.language, {
+        month: 'long',
+      })
+    },
+    currentFullYear(){
+      return this.date.getFullYear()
+    },
+    daysArray(){
+      let currentDate;
+      let prevDays;
+      let nextDays;
+      let firstDay = new Date(this.currentFullYear, this.currentMonth, 1).getDay();
+      let lastDay = new Date(this.currentFullYear, this.currentMonth + 1, 0).getDay();
+      let daysArray = [];
+
+      firstDay === 0 ? prevDays = 6 : prevDays = firstDay - 1;
+      lastDay === 0 ? nextDays = 0 : nextDays = 7 - lastDay;
+
+      let total = prevDays + (new Date(this.currentFullYear, this.currentMonth+1, 0).getDate()) + nextDays;
+
+      for (let i = 1 - prevDays; daysArray.length < total; i++) {
+        currentDate = new Date(this.currentFullYear, this.currentMonth, i);
+        let currentDateStr = currentDate.toLocaleString(navigator.language, {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric'
+        });
+        daysArray.push({
+            dayDate: currentDateStr,
+            dayNum: currentDate.getDate(),
+            isInactive: (daysArray.length < prevDays) || (daysArray.length >= (total - nextDays)),
+          }
+        );
+      }
+      return daysArray;
+    }
+  },
+
+  methods: {
+    prevMonth(){
+      this.date = new Date(this.currentFullYear, this.currentMonth-1);
+    },
+    nextMonth(){
+      this.date = new Date(this.currentFullYear, this.currentMonth+1);
+    }
+  }
 };
 </script>
 
