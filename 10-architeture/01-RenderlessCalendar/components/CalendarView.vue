@@ -20,7 +20,7 @@
                v-for="day in daysArray"
           >
             {{ day.dayNum }}
-            <slot :day="day"></slot>
+            <slot :currentDate="day.currentDate"></slot>
           </div>
         </div>
       </div>

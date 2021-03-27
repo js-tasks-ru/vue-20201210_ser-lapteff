@@ -47,7 +47,7 @@ export default {
           day: 'numeric'
         });
         daysArray.push({
-            monthNum: currentDate.getMonth(),
+            currentDate: currentDate,
             dayNum: currentDate.getDate(),
             isInactive: (daysArray.length < prevDays) || (daysArray.length >= (total - nextDays)),
           }
