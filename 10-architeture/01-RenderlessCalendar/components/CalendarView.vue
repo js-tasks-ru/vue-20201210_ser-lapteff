@@ -19,7 +19,7 @@
                :class="{ rangepicker__cell_inactive: day.isInactive }"
                v-for="day in daysArray"
           >
-            {{ day.dayNum }}
+            {{ day.currentDate.getDate() }}
             <slot :currentDate="day.currentDate"></slot>
           </div>
         </div>

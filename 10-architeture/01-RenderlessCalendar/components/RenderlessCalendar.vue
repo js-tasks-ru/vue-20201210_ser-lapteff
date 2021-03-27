@@ -41,14 +41,8 @@ export default {
 
       for (let i = 1 - prevDays; daysArray.length < total; i++) {
         currentDate = new Date(this.currentFullYear, this.currentMonth, i);
-        let currentDateStr = currentDate.toLocaleString(navigator.language, {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric'
-        });
         daysArray.push({
             currentDate: currentDate,
-            dayNum: currentDate.getDate(),
             isInactive: (daysArray.length < prevDays) || (daysArray.length >= (total - nextDays)),
           }
         );
