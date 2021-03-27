@@ -1,12 +1,15 @@
 <template>
-  <calendar-view>
-    <!--
-    <calendar-view-event
-      tag="router-link"
-      :to="{ name: 'meetup', params: { meetupId: meetup.id } }"
-      >{{ meetup.title }}</calendar-view-event
-    >
-    -->
+  <calendar-view :month="4" :year="2020">
+    <template #default="{day}">
+      <calendar-view-event
+        v-for="meetup in meetups"
+        v-if="new Date(meetup.date).getMonth() === day.monthNum && new Date(meetup.date).getDate() === day.dayNum"
+        tag="router-link"
+        :to="{ name: 'meetup', params: { meetupId: meetup.id } }"
+      >
+        {{ meetup.title }}
+      </calendar-view-event>
+    </template>
   </calendar-view>
 </template>
 
