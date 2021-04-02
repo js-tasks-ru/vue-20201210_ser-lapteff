@@ -3,10 +3,12 @@ export default {
   name: 'RenderlessCalendar',
   props: {
     month: {
-      type: Number
+      type: Number,
+      default: () => new Date().getMonth()
     },
     year: {
       type: Number,
+      default: () => new Date().getFullYear()
     }
   },
   data() {

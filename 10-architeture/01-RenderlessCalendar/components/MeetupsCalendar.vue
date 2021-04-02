@@ -1,9 +1,9 @@
 <template>
-  <calendar-view :month="4" :year="2020">
+  <calendar-view>
     <template #default="{currentDate}">
       <calendar-view-event
-        v-for="meetup in meetups"
-        v-if="new Date(meetup.date).getMonth() === currentDate.getMonth() && new Date(meetup.date).getDate() === currentDate.getDate() && new Date(meetup.date).getFullYear() === currentDate.getFullYear()"
+        v-for="meetup in meetupsByDate[currentDate.toDateString()]"
+        :key="meetup.id"
         tag="router-link"
         :to="{ name: 'meetup', params: { meetupId: meetup.id } }"
       >
@@ -26,11 +26,24 @@ export default {
       required: true,
     },
   },
-
+  computed: {
+    meetupsByDate() {
+      const result = {};
+      this.meetups.forEach((meetup) => {
+        const dateString = new Date(meetup.date).toDateString();
+        if (!result[dateString]) {
+          result[dateString] = [meetup];
+        } else {
+          result[dateString].push(meetup);
+        }
+      });
+      return result;
+    },
+  },
   components: {
     CalendarViewEvent,
     CalendarView,
-  },
+  }
 };
 </script>
 

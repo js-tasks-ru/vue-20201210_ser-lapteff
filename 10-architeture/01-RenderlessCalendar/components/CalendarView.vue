@@ -30,7 +30,6 @@
 
 <script>
 import RenderlessCalendar from './RenderlessCalendar';
-
 export default {
   name: 'CalendarView',
 
@@ -39,11 +38,11 @@ export default {
   props: {
     month: {
       type: Number,
-      default: (new Date()).getMonth()
+      default: () => new Date().getMonth()
     },
     year: {
       type: Number,
-      default: (new Date()).getFullYear()
+      default: () => new Date().getFullYear()
     }
   }
 };
