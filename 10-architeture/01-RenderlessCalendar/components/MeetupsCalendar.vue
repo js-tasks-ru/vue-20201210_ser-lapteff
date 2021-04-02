@@ -1,12 +1,15 @@
 <template>
   <calendar-view>
-    <!--
-    <calendar-view-event
-      tag="router-link"
-      :to="{ name: 'meetup', params: { meetupId: meetup.id } }"
-      >{{ meetup.title }}</calendar-view-event
-    >
-    -->
+    <template #default="{currentDate}">
+      <calendar-view-event
+        v-for="meetup in meetupsByDate[currentDate.toDateString()]"
+        :key="meetup.id"
+        tag="router-link"
+        :to="{ name: 'meetup', params: { meetupId: meetup.id } }"
+      >
+        {{ meetup.title }}
+      </calendar-view-event>
+    </template>
   </calendar-view>
 </template>
 
@@ -23,11 +26,24 @@ export default {
       required: true,
     },
   },
-
+  computed: {
+    meetupsByDate() {
+      const result = {};
+      this.meetups.forEach((meetup) => {
+        const dateString = new Date(meetup.date).toDateString();
+        if (!result[dateString]) {
+          result[dateString] = [meetup];
+        } else {
+          result[dateString].push(meetup);
+        }
+      });
+      return result;
+    },
+  },
   components: {
     CalendarViewEvent,
     CalendarView,
-  },
+  }
 };
 </script>
 
